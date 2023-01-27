@@ -1,20 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import { Profiles, LensProvider } from '@lens-protocol/react-native-lens-ui-kit'
+import { ProfileView, ViewFollowing, ViewComments } from './pages';
+
+const Stack = createNativeStackNavigator()
+
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: 'black'
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const ProfileComponent = ({ navigation }) => {
+  return (
+    <Profiles
+      onProfilePress={
+        profile => navigation.navigate("Profile", { profile })
+      }
+    />
+  )
+}
+
+const App = () => {
+  return (
+    <LensProvider theme="dark">
+      <NavigationContainer theme={MyTheme}>
+        <Stack.Navigator>
+          <Stack.Screen name="Profiles" component={ProfileComponent} />
+          <Stack.Screen name="Profile" component={ProfileView} />
+          <Stack.Screen name="ViewFollowing" component={ViewFollowing} />
+          <Stack.Screen name="ViewComments" component={ViewComments} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </LensProvider>
+  )
+}
+
+export default App;
